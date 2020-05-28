@@ -1,0 +1,107 @@
+q:1
+CREATE TABLE `countries`(
+    country_id CHAR (2) not null PRIMARY key,
+    country_name varchar (40)  ,
+    region_id integer not null,
+    FOREIGN KEY (region_id)   REFERENCES regions(region_id) 
+)
+q:2
+CREATE TABLE `departments`(
+    department_id integer not null PRIMARY key,
+    department_name varchar (30)  ,
+    manager_id integer ,
+    location_id integer ,
+    FOREIGN KEY (location_id)   REFERENCES locations(location_id) 
+)
+
+q:3
+CREATE TABLE `employees`(
+    employee_id integer not null PRIMARY key,
+    first_name varchar (20)  ,
+    last_name varchar (25)  ,
+    email varchar (25)  , 
+    phone_number varchar (20)  , 
+    hire_date date ,
+    job_id varchar (20)  ,
+    salary integer,
+    commission_pct integer,
+    manager_id integer ,
+    department_id integer ,
+    FOREIGN KEY (department_id)   REFERENCES departments(department_id) 
+)
+
+q:4
+CREATE TABLE `job_history`(
+    employee_id integer not null ,
+    start_date date not null ,
+    end_date date,
+    job_id varchar (10) ,
+    department_id integer ,
+    PRIMARY key (employee_id, start_date),
+    FOREIGN KEY (employee_id) REFERENCES employees(employee_id),
+    FOREIGN KEY (job_id) REFERENCES jobs(job_id),
+    FOREIGN KEY (department_id) REFERENCES departments(department_id)
+)
+q:5
+CREATE TABLE `jobs`(
+    job_id varchar (10) not null PRIMARY key,
+    job_title varchar (35)  ,
+    min_salary integer,
+    max_salary integer
+)
+
+q:6
+CREATE TABLE `locations`(
+    location_id integer not null PRIMARY key,
+    street_address varchar (25)  ,
+    postal_code varchar (12),
+    city varchar (30),
+    state_province varchar (12),
+    country_id char (2) ,
+    FOREIGN KEY (country_id)   REFERENCES countries(country_id) 
+)
+q:7
+CREATE TABLE `regions`(
+    region_id integer  not null PRIMARY key,
+    region_name varchar (25) not null ,
+)
+q:8
+select first_name AS prenom , last_name AS nom from employees 
+q:9
+SELECT DISTINCT department_id from employees
+q:11
+SELECT first_name, last_name , salary , salary * 0.15 AS CP FROM `employees`
+q:12
+SELECT employee_id, first_name, last_name, salary FROM `employees` ORDER BY salary ASC
+q:13
+SELECT SUM(salary) AS Total_salaries_to_pay FROM `employees` 
+q:14
+SELECT AVG(salary) AS Moyen_salary, COUNT(employee_id) AS Number_employees FROM `employees` 
+q:15
+SELECT COUNT(salary) FROM `employees`
+q:16
+SELECT  COUNT(DISTINCT job_id ) AS Nb_Job FROM employees 
+q:17
+SELECT UPPER (first_name) AS prenom FROM `employees`
+q:18
+SELECT SUBSTR(first_name, 1, 3) AS short_name FROM employees
+q:19
+SELECT MAX(salary), MIN(salary) FROM `employees`
+q:20
+SELECT first_name, last_name, salary FROM `employees` WHERE salary NOT BETWEEN 10000 AND 15000
+q:21
+SELECT `EMPLOYEE_ID`, `FIRST_NAME`, `LAST_NAME`, DEPARTMENT_ID FROM `employees` WHERE DEPARTMENT_ID= 30 OR DEPARTMENT_ID=100
+q:22
+SELECT `FIRST_NAME`, `LAST_NAME`, SALARY,DEPARTMENT_ID FROM employees WHERE (SALARY < 10000 OR SALARY > 15000) AND (DEPARTMENT_ID= 30 OR DEPARTMENT_ID=100)
+q:23
+SELECT FIRST_NAME, LAST_NAME, HIRS_DATA FROM employees WHERE SUBSTR(HIRS_DATA, 1, 4)=1987
+q:24
+SELECT first_name,last_name,department_id FROM `employees` WHERE department_id IN (SELECT department_id FROM `departments` WHERE department_name LIKE 'IT%')
+q:25
+SELECT departments.department_id, departments.department_name , locations.location_id , locations.street_address, locations.city, locations.state_province, countries.country_name FROM departments , locations, countries WHERE (departments.location_id = locations.location_id) AND (locations.country_id = countries.country_id)
+q:26
+SELECT jobs.job_title, AVG(employees.salary) AS Moyen_salary FROM employees, jobs WHERE employees.job_id = jobs.job_id GROUP BY job_title
+q:27
+SELECT employee_id, job_id, DATEDIFF ( end_date, start_date)/365 AS years_of_work FROM job_histor
+q:28
+UPDATE employees SET phone_number = REPLACE ( phone_number, '124','999')
